@@ -2,6 +2,8 @@
 
 A minimal file explorer plugin for Neovim.
 
+https://github.com/sys9kdr/dsfe.nvim/assets/1529486/a5d6214a-47fe-4485-92aa-a537e3a0fa3c
+
 * Version: Pre-release. Under development, so there may be BREAKING CHANGES.
 * Target: nvim v0.9+
 
