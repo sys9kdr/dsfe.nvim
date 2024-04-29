@@ -1,5 +1,4 @@
---MIT
---(c)2024 Daiki Noda
+--(c)2024 sys9kdr Apache v2
 
 ---@class FileInfo
 ---@field name string The filename.
