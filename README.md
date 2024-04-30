@@ -28,11 +28,7 @@ require("lazy").setup({
 })
 ```
 
-2. Restart Neovim.
-
-3. Run `:Lazy check` to install the plugin.
-
-4. You're all set! You can now use dsfe.nvim by invoking the file explorer with:
+2. After restart, you're all set! You can now use dsfe.nvim by invoking the file explorer with:
 
 ```vim
 :e .
