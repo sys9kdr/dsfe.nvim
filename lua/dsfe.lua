@@ -1,9 +1,5 @@
 --(c)2024 sys9kdr Apache v2
 
----@class FileInfo
----@field name string The filename.
----@field is_dir boolean Indicates whether it is a directory or not.
-
 return {
   ---@type fun(opt: { show_hidden: boolean }?): nil
   setup = function(opt)

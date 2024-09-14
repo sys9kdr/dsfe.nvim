@@ -12,3 +12,7 @@
 ---@field buf number Expanded value of `<abuf>`.
 ---@field file string Expanded value of `<afile>`.
 ---@field data any Arbitrary data passed from `nvim_exec_autocmds()`.
+
+---@class FileInfo
+---@field name string The filename.
+---@field is_dir boolean Indicates whether it is a directory or not.
