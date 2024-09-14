@@ -10,8 +10,10 @@ return {
       vim.g.dsfe_show_hidden = true
     end
 
-    local uv, setl = vim.uv or vim.loop,
-        function(name, value) vim.api.nvim_set_option_value(name, value, { scope = 'local' }) end
+    local uv, setl =
+      vim.uv or vim.loop, function(name, value)
+        vim.api.nvim_set_option_value(name, value, { scope = 'local' })
+      end
 
     ---@param file_list FileInfo[]
     ---@return string[]
