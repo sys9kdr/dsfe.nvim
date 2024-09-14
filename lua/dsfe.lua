@@ -17,13 +17,6 @@ return {
     local uv, setl = vim.uv or vim.loop,
         function(name, value) vim.api.nvim_set_option_value(name, value, { scope = 'local' }) end
 
-    ---@param path string
-    ---@return boolean|nil #Returns nil if the path is not valid or an error occurs.
-    local function is_dir(path)
-      local stat = uv.fs_stat(path)
-      return stat and stat.type == 'directory'
-    end
-
     ---@param file_list FileInfo[]
     ---@return string[]
     local function get_names(file_list)
@@ -53,12 +46,12 @@ return {
     -- Initialize the dsfe buffer with the provided event.
     ---@type fun(ev: AutocommandCallbackEvents): nil
     local function init(ev)
-      if not is_dir(ev.file) then
-        return
+      local f, err = uv.fs_scandir(ev.file) --[[@as uv.uv_fs_t ]]
+      if err then
+        error('Error scanning directory:' .. err)
       end
 
       local files = {} ---@type FileInfo[]
-      local f = uv.fs_scandir(ev.file) --[[@as uv.uv_fs_t ]]
       local name, filetype = uv.fs_scandir_next(f)
 
       if vim.g.dsfe_show_hidden then
