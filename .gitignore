@@ -1,2 +1,4 @@
 *.log
 htmldoc
+
+/assets/demo.mp4
