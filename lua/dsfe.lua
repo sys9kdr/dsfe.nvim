@@ -48,7 +48,7 @@ return {
     local function init(ev)
       local f, err = uv.fs_scandir(ev.file) --[[@as uv.uv_fs_t ]]
       if err then
-        error('Error scanning directory:' .. err)
+        return
       end
 
       local files = {} ---@type FileInfo[]
