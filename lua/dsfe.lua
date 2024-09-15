@@ -18,9 +18,9 @@ return {
     ---@param file_list FileInfo[]
     ---@return string[]
     local function get_names(file_list)
-      local t = {}
-      for i, e in ipairs(file_list) do
-        t[i] = e.name
+      local t = {} ---@type string[]
+      for i = 1, #file_list do
+        t[i] = file_list[i].name
       end
       return t
     end
