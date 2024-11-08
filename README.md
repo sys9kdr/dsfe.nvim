@@ -60,7 +60,12 @@ vim.g.loaded_netrwFileHandlers = true
 ## Customize
 
 ```lua
-vim.g.dsfe_show_hidden = true -- show hidden file. default `true`.
+require("lazy").setup({
+    "sys9kdr/dsfe.nvim",
+    config = function()
+        require('dsfe').setup({ show_hidden = true })
+    end
+})
 ```
 
 ## Contributing
