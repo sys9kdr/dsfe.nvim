@@ -53,12 +53,14 @@ return {
       setl('modifiable', true)
       setl('filetype', 'dsfe')
 
+
+      table.sort(files, file_sort)
+
       local names = {} ---@type string[]
       for i = 1, #files do
         names[i] = files[i].display_name
       end
 
-      table.sort(files, file_sort)
       api.nvim_buf_set_lines(0, 0, -1, true, names)
       api.nvim_buf_set_var(0, 'dsfe_event_val', ev)
 
