@@ -14,5 +14,5 @@
 ---@field data any Arbitrary data passed from `nvim_exec_autocmds()`.
 
 ---@class FileInfo
----@field name string The filename.
+---@field display_name string The display name at a buffer.
 ---@field is_dir boolean Indicates whether it is a directory or not.

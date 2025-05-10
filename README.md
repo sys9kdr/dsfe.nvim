@@ -59,8 +59,16 @@ vim.g.loaded_netrwFileHandlers = true
 
 ## Customize
 
+Hidden files visibility is disabled by default.
+If you want to enable visibility set `{ show_hidden = true } ` at `setup`.
+
 ```lua
-vim.g.dsfe_show_hidden = true -- show hidden file. default `true`.
+require("lazy").setup({
+    "sys9kdr/dsfe.nvim",
+    config = function()
+        require('dsfe').setup({ show_hidden = true })
+    end
+})
 ```
 
 ## Contributing

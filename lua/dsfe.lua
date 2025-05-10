@@ -3,51 +3,35 @@
 return {
   ---@type fun(opt: { show_hidden: boolean }?): nil
   setup = function(opt)
-    -- Primiarity: show_hidden(arg) > vim.g.dsfe_show_hidden(already set) > true(default value)
-    if opt and opt.show_hidden ~= nil then
-      vim.g.dsfe_show_hidden = opt.show_hidden
-    elseif vim.g.dsfe_show_hidden == nil then
-      vim.g.dsfe_show_hidden = true
-    end
+    -- vim.g.dsfe_show_hidden is not a user configuration variable; it controls the visibility of hidden files in the global status.
+    vim.g.dsfe_show_hidden = opt and opt.show_hidden or false
 
-    local uv, setl =
-      vim.uv or vim.loop, function(name, value)
-        vim.api.nvim_set_option_value(name, value, { scope = 'local' })
-      end
-
-    ---@param file_list FileInfo[]
-    ---@return string[]
-    local function get_names(file_list)
-      local t = {} ---@type string[]
-      for i = 1, #file_list do
-        t[i] = file_list[i].name
-      end
-      return t
+    local api, uv = vim.api, vim.uv or vim.loop
+    local function setl(name, value)
+      api.nvim_set_option_value(name, value, { scope = 'local' })
     end
 
     -- Sort with directory/file and their name.
-    ---@type fun(lhs: FileInfo, rhs:FileInfo): boolean
+    ---@type fun(lhs: FileInfo, rhs: FileInfo): boolean
     local function file_sort(lhs, rhs)
       if lhs.is_dir ~= rhs.is_dir then
         return lhs.is_dir
       else
-        return lhs.name < rhs.name
+        return lhs.display_name < rhs.display_name
       end
     end
 
     ---@type fun(name: string, filetype: string): FileInfo
     local function convert_to_fileinfo(name, filetype)
-      return filetype == 'directory' and { name = name .. '/', is_dir = true }
-        or { name = name, is_dir = false }
+      local is_dir = filetype == 'directory'
+      return { display_name = is_dir and name .. '/' or name, is_dir = is_dir }
     end
 
     -- Initialize the dsfe buffer with the provided event.
     ---@type fun(ev: AutocommandCallbackEvents): nil
     local function init(ev)
       local f, err = uv.fs_scandir(ev.file) --[[@as uv.uv_fs_t ]]
-      if err then
-        return
-      end
+      if err then return end
 
       local files = {} ---@type FileInfo[]
       local name, filetype = uv.fs_scandir_next(f)
@@ -59,7 +43,7 @@ return {
         end
       else
         while name do
-          if name:sub(1, 1) ~= '.' then
+          if name:byte(1) ~= 46 then
             files[#files + 1] = convert_to_fileinfo(name, filetype)
           end
           name, filetype = uv.fs_scandir_next(f)
@@ -69,9 +53,16 @@ return {
       setl('modifiable', true)
       setl('filetype', 'dsfe')
 
+
       table.sort(files, file_sort)
-      vim.api.nvim_buf_set_lines(0, 0, -1, true, get_names(files))
-      vim.api.nvim_buf_set_var(0, 'dsfe_event_val', ev)
+
+      local names = {} ---@type string[]
+      for i = 1, #files do
+        names[i] = files[i].display_name
+      end
+
+      api.nvim_buf_set_lines(0, 0, -1, true, names)
+      api.nvim_buf_set_var(0, 'dsfe_event_val', ev)
 
       setl('buftype', 'nofile')
       setl('bufhidden', 'unload')
@@ -83,20 +74,19 @@ return {
       setl('cursorline', true)
     end
 
-    vim.api.nvim_create_augroup('_dsfe_', { clear = true })
-    vim.api.nvim_create_autocmd('VimEnter', {
+    local id = api.nvim_create_augroup('_dsfe_', { clear = true })
+    api.nvim_create_autocmd('VimEnter', {
       once = true,
-      group = '_dsfe_',
+      group = id,
       pattern = '*',
       callback = function()
-        -- from github.com/mattn/vim-molder/blob/f9d5c8113fe2ea977516652be03f79ec0d35bb68/plugin/molder.vim#L6C1-L13C12
-        -- Using pcall without the return value, which is not recommended
-        pcall(vim.api.nvim_clear_autocmds, { group = 'FileExplorer' })
-        pcall(vim.api.nvim_clear_autocmds, { group = 'NERDTreeHijackNetrw' })
+        -- from mattn/vim-molder
+        pcall(api.nvim_clear_autocmds, { group = 'FileExplorer' })
+        pcall(api.nvim_clear_autocmds, { group = 'NERDTreeHijackNetrw' })
       end,
     })
-    vim.api.nvim_create_autocmd('BufEnter', {
-      group = '_dsfe_',
+    api.nvim_create_autocmd('BufEnter', {
+      group = id,
       pattern = '*',
       callback = init,
     })
