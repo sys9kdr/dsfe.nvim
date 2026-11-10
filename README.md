@@ -81,16 +81,6 @@ vim.keymap.set('n', '<leader>e', '<cmd>vnew | e .<CR>')
 
 Tip: Use `<C-w>h` / `<C-w>l` to move between explorer and file buffer. When opening files with `<CR>`, they replace the explorer window - use `<C-w>s` or `<C-w>v` beforehand to keep the explorer visible.
 
-```
-	api.nvim_create_autocmd("VimEnter", {
-		once = true, -- no group, cuz' oneshot
-		pattern = "*",
-		callback = function()
-			pcall(api.nvim_clear_autocmds, { group = "NERDTreeHijackNetrw" })
-		end,
-	})
-```
-
 ## Contributing
 
 We welcome and encourage your contributions! Please feel free to submit any issues you encounter or create pull requests for improvements. We appreciate your input! 🚀
