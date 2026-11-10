@@ -13,7 +13,7 @@ A minimal file explorer plugin for Neovim
 
 ## Installation
 
-You can easily install `dsfe.nvim` using your favorite Neovim plugin manager. Here's an example using [Lazy.nvim](https://github.com/folke/lazy.nvim#%EF%B8%8F-configuration):
+You can easily install `dsfe.nvim` using your favorite Neovim plugin manager.
 
 1. Add the following line to your Neovim configuration file (typically `~/.config/nvim/init.lua`):
 
@@ -65,7 +65,7 @@ vim.g.loaded_netrwFileHandlers = true
 -- ...
         require('dsfe').setup({
             show_hidden = true,
-            default_keymaps = true, 
+            default_keymaps = true,
         })
 -- ...
 ```
