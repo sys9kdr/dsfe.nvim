@@ -95,10 +95,6 @@ Tip: Use `<C-w>h` / `<C-w>l` to move between explorer and file buffer. When open
 
 We welcome and encourage your contributions! Please feel free to submit any issues you encounter or create pull requests for improvements. We appreciate your input! 🚀
 
-## License
-
-[Apache v2](LICENSE).
-
 ## Credits
 
 This plugin is heavily inspired from [vim-molder](https://github.com/mattn/vim-molder) and [lir.nvim](https://github.com/tamago324/lir.nvim).

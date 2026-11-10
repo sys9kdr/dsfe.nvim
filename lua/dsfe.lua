@@ -1,4 +1,3 @@
--- MIT (c)2024 Daiki Noda
 local api, uv, sort = vim.api, vim.uv, table.sort
 local buf_set_lines, buf_set_var = api.nvim_buf_set_lines, api.nvim_buf_set_var
 
