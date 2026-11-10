@@ -1,7 +1,6 @@
 local api, uv = vim.api, vim.uv
 
-local M = {}
-M.config = { show_hidden = true, default_keymaps = true }
+local M = { config = { show_hidden = true, default_keymaps = true } }
 
 ---(Re)render a directory into an explorer buffer; public for tests and in-place reload (:edit wipes nofile buffers).
 ---@param buf integer buffer handle, or 0 for the current buffer
@@ -15,7 +14,7 @@ function M.render(buf, path)
 
 	local dirs, files = {}, {} ---@type string[], string[]
 	local show_hidden = M.config.show_hidden
-	while true do -- `if` in-the-loop, but no significant difference with out-of-the-loop at 40k lines.
+	while true do -- no significant difference at 40k entries if hoisting the show_hidden check out of the loop
 		local n, t = uv.fs_scandir_next(f)
 		if not n then break end
 		if show_hidden or n:byte(1) ~= 46 then
