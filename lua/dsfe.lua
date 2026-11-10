@@ -15,13 +15,9 @@ function M.render(buf, path)
 
 	local dirs, files = {}, {} ---@type string[], string[]
 	local show_hidden = M.config.show_hidden
-	while true do
+	while true do -- `if` in-the-loop, but no significant difference with out-of-the-loop at 40k lines.
 		local n, t = uv.fs_scandir_next(f)
 		if not n then break end
-		-- the per-entry `show_hidden` test is one register read plus a perfectly
-		-- predicted branch (~0.4ns, short-circuiting the byte check when true).
-		-- hoisting it out of the loop would duplicate the body for no measurable
-		-- gain: A/B on a 40k-entry dir showed no difference beyond noise.
 		if show_hidden or n:byte(1) ~= 46 then
 			if t == "directory" then
 				dirs[#dirs + 1] = n .. "/"
@@ -61,8 +57,7 @@ function M.setup(c)
 	api.nvim_create_autocmd("VimEnter", {
 		once = true,
 		pattern = "*",
-		-- take over from netrw and NERDTree (the latter via upstream dsfe, from mattn/vim-molder)
-		callback = function()
+		callback = function() -- take over from netrw and NERDTree (from mattn/vim-molder)
 			pcall(api.nvim_clear_autocmds, { group = "FileExplorer" })
 			pcall(api.nvim_clear_autocmds, { group = "NERDTreeHijackNetrw" })
 		end,
